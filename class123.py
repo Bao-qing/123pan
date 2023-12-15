@@ -288,7 +288,7 @@ class Pan123:
             if not str(file).isdigit():
                 print("请输入数字")
                 return -1
-            if 0 < file < len(self.list):
+            if 0 <= file < len(self.list):
                 file_detail = self.list[file]
             else:
                 print("不在合理范围内")
