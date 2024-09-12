@@ -41,9 +41,13 @@
 2. 打开终端或命令提示符，进入项目目录。
 
 3. 运行脚本：
-
+   安卓客户端协议：
    ```bash
    python andriod.py
+   ```
+   web协议：
+   ```bash
+   python 123pan.py
    ```
 
 ### 命令
