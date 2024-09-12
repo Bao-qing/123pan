@@ -41,13 +41,16 @@
 2. 打开终端或命令提示符，进入项目目录。
 
 3. 运行脚本：
-   安卓客户端协议：
+
+   使用安卓客户端协议
    ```bash
-   python andriod.py
+   python android.py
    ```
-   web协议：
+
+​	使用web协议 
+
    ```bash
-   python 123pan.py
+   	python 123pan.py
    ```
 
 ### 命令
@@ -56,6 +59,7 @@
 - **列出文件**：`ls`
 - **刷新目录**：`re`
 - **下载文件**：`download <文件编号>`
+- **获取下载链接** `link <文件编号>`
 - **分享文件**：`share`
 - **删除文件**：`delete <文件编号>`
 - **创建文件夹**：`mkdir <文件夹名称>`
@@ -96,7 +100,16 @@
 
    
 
-4. 分享文件：
+4. 获取下载链接
+
+   ```bash
+    >link 32
+   https://1-180-24-9.pd1.cjjd19.com:30443/(A Long Link)
+   ```
+
+   获取下载链接后可以使用IDM下载
+
+5. 分享文件：
 
    ```bash
     >share↵
@@ -109,19 +122,19 @@
    https://www.123pan.com/s/(someting)提取码：(something)
    ```
 
-5. 删除文件：
+6. 删除文件：
 
    ```bash
    > delete 1
    ```
 
-6. 创建文件夹：
+7. 创建文件夹：
 
    ```bash
    > mkdir 新建文件夹
    ```
 
-7. 上传文件：
+8. 上传文件：
 
    ```bash
     >upload
