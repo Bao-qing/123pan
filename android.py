@@ -4,6 +4,7 @@ import os
 import re
 import time
 
+import uuid
 import requests
 
 
@@ -40,7 +41,7 @@ class Pan123:
             # "authorization": "",
             "content-type": "application/json",
             "osversion": "Android_7.1.2",
-            "loginuuid": "3ec3167d3ba54ba61ea15b823b0a05f4",
+            "loginuuid": str(uuid.uuid4().hex),
             "platform": "android",
             "devicetype": "M2101K9C",
             "x-channel": "1004",
@@ -140,8 +141,8 @@ class Pan123:
             text = a.json()
             res_code_getdir = text["code"]
             if res_code_getdir != 0:
-                print(a.text)
-                print(a.headers)
+                #print(a.text)
+                #print(a.headers)
                 print("code = 2 Error:" + str(res_code_getdir))
                 return res_code_getdir
             lists_page = text["data"]["InfoList"]
