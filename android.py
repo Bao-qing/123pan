@@ -212,7 +212,7 @@ class Pan123:
             down_request_url,
             headers=self.header_logined,
             # params={sign[0]: sign[1]},
-            data=down_request_data,
+            data=json.dumps(down_request_data),
             timeout=10
         )
         # print(linkRes.text)
@@ -230,15 +230,24 @@ class Pan123:
 
         return redirect_url
 
-    def download(self, file_number):
+    def download(self, file_number,download_path="download/"):
         file_detail = self.list[file_number]
+        if file_detail["Type"] == 1:
+            print("打包下载")
+            file_name = file_detail["FileName"] + ".zip"
+        else:
+            file_name = file_detail["FileName"]  # 文件名
         down_load_url = self.link(file_number, showlink=False)
-        file_name = file_detail["FileName"]  # 文件名
-        if os.path.exists(file_name):
+
+        if os.path.exists(download_path+file_name):
             print("文件 " + file_name + " 已存在，是否要覆盖？")
             sure_download = input("输入1覆盖，2取消：")
             if sure_download != "1":
                 return
+
+        if not os.path.exists(download_path):
+            print("文件夹不存在，创建文件夹")
+            os.makedirs(download_path)
         down = requests.get(down_load_url, stream=True, timeout=10)
 
         file_size = int(down.headers["Content-Length"])  # 文件大小
@@ -252,7 +261,7 @@ class Pan123:
         time1 = time.time()
         time_temp = time1
         data_count_temp = 0
-        with open(file_name, "wb") as f:
+        with open(download_path+file_name, "wb") as f:
             for i in down.iter_content(1024):
                 f.write(i)
                 done_block = int((data_count / content_size) * 50)
@@ -731,7 +740,7 @@ if __name__ == "__main__":
                 # print(pan.list[int(command) - 1])
                 name = pan.list[int(command) - 1]["FileName"]
                 print(name + "  " + size_print_show)
-                print("press 1 to download now: ", end="")
+                print("输入1开始下载: ", end="")
                 sure = input()
                 if sure == "1":
                     pan.download(int(command) - 1)
@@ -740,6 +749,12 @@ if __name__ == "__main__":
                 if int(command[9:]) > len(pan.list) or int(command[9:]) < 1:
                     print("输入错误")
                     continue
+                if pan.list[int(command[9:]) - 1]["Type"] == 1:
+                    print(pan.list[int(command[9:]) - 1]["FileName"])
+                    print("将打包下载文件夹，输入1开始下载:", end="")
+                    sure = input()
+                    if sure != "1":
+                        continue
                 pan.download(int(command[9:]) - 1)
             else:
                 print("输入错误")
