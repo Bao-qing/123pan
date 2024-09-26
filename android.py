@@ -142,7 +142,7 @@ class Pan123:
                 a = requests.get(base_url, headers=self.header_logined, params=params, timeout=10)  # , verify=False)
             except:
                 print("连接失败")
-                return -1
+                return -1, []
             # print(a.text)
             # print(a.headers)
             text = a.json()
@@ -151,7 +151,7 @@ class Pan123:
                 # print(a.text)
                 # print(a.headers)
                 print("code = 2 Error:" + str(res_code_getdir))
-                return res_code_getdir
+                return res_code_getdir, []
             lists_page = text["data"]["InfoList"]
             lists += lists_page
             total = text["data"]["Total"]
