@@ -783,6 +783,10 @@ class Pan123:
 
 
 if __name__ == "__main__":
+    # 用于解决windows下cmd颜色转义乱码问题
+    if os.name == "nt":
+        os.system("")
+
     pan = Pan123(readfile=True, input_pwd=True)
     pan.show()
     while True:
