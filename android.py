@@ -285,9 +285,9 @@ class Pan123:
         content_size = int(file_size)  # 文件总大小
         data_count = 0  # 当前已传输的大小
         if file_size > 1048576:
-            size_print_download = str(round(file_size / 1048576, 2)) + "M"
+            size_print_download = str(round(file_size / 1048576, 2)) + "MB"
         else:
-            size_print_download = str(round(file_size / 1024, 2)) + "K"
+            size_print_download = str(round(file_size / 1024, 2)) + "KB"
         print(file_name + "    " + size_print_download)
         time1 = time.time()
         time_temp = time1
@@ -311,9 +311,9 @@ class Pan123:
                     speed = pass_data / int(pass_time)
                     speed_m = speed / 1048576
                     if speed_m > 1:
-                        speed_print = str(round(speed_m, 2)) + "M/S"
+                        speed_print = str(round(speed_m, 2)) + "MB/S"
                     else:
-                        speed_print = str(round(speed_m * 1024, 2)) + "K/S"
+                        speed_print = str(round(speed_m * 1024, 2)) + "KB/S"
                     print(
                         "\r [%s%s] %d%%  %s"
                         % (
@@ -834,6 +834,8 @@ if __name__ == "__main__":
                     elif sure == "1":
                         file_detail = pan.list[int(command[9:]) - 1]
                         pan.download_dir(file_detail)
+                        # 重置下载模式
+                        pan.download_mode = 1
                 else:
                     pan.download(int(command[9:]) - 1)
 
