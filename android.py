@@ -690,7 +690,7 @@ class Pan123:
             print("输入错误")
             return
         dir_num = int(dir_num) - 1
-        if dir_num >= (len(self.list) - 1) or dir_num < 0:
+        if dir_num > (len(self.list) - 1) or dir_num < 0:
             print("输入错误")
             return
         if self.list[dir_num]["Type"] != 1:
