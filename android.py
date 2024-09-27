@@ -228,10 +228,11 @@ class Pan123:
             timeout=10
         )
         # print(linkRes.text)
-        res_code_download = link_res.json()["code"]
+        link_res_json = link_res.json()
+        res_code_download = link_res_json["code"]
         if res_code_download != 0:
             print("code = 3 Error:" + str(res_code_download))
-            # print(linkRes.json())
+            print(link_res_json["message"])
             return res_code_download
         down_load_url = link_res.json()["data"]["DownloadUrl"]
         next_to_get = requests.get(down_load_url, timeout=10, allow_redirects=False).text
@@ -251,6 +252,8 @@ class Pan123:
             file_name = file_detail["FileName"]  # 文件名
 
         down_load_url = self.link_by_number(file_number, showlink=False)
+        if type(down_load_url) == int:
+            return
         self.download_from_url(down_load_url, file_name, download_path)
 
 
