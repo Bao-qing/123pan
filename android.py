@@ -121,7 +121,7 @@ class Pan123:
         lenth_now = 0
         total = -1
         while lenth_now < total or total == -1:
-            base_url = "https://www.123pan.com/b/api/file/list/new"
+            base_url = "https://www.123pan.com/api/file/list/new"
             # print(self.headerLogined)
             # sign = getSign("/b/api/file/list/new")
             # print(sign)
@@ -139,7 +139,7 @@ class Pan123:
                 "OnlyLookAbnormalFile": 0,
             }
             try:
-                a = requests.get(base_url, headers=self.header_logined, params=params, timeout=10)  # , verify=False)
+                a = requests.get(base_url, headers=self.header_logined, params=params, timeout=30)  # , verify=False)
             except:
                 print("连接失败")
                 return -1, []
@@ -151,6 +151,7 @@ class Pan123:
                 # print(a.text)
                 # print(a.headers)
                 print("code = 2 Error:" + str(res_code_getdir))
+                print(text["message"])
                 return res_code_getdir, []
             lists_page = text["data"]["InfoList"]
             lists += lists_page
@@ -299,7 +300,7 @@ class Pan123:
                 data_count = data_count + len(i)
                 # 实时进度条进度
                 now_jd = (data_count / content_size) * 100
-                # %% 表示%
+                # "%%" 表示%
                 # 测速
                 time1 = time.time()
                 pass_time = time1 - time_temp
@@ -345,28 +346,26 @@ class Pan123:
         for i in self.dir_list:
             self.get_all_things(i)
 
-    def download_dir(self,file_number,download_path_root="download"):
-        file_detail = self.list[file_number]
+    def download_dir(self,file_detail,download_path_root="download"):
+        # file_detail = self.list[file_number]
+        self.name_dict[file_detail["FileId"]] = file_detail["FileName"]
         if file_detail["Type"] != 1:
             print("不是文件夹")
             return
 
-        self.file_list = []
-        self.dir_list = [file_detail["FileId"]]
-        self.name_dict = {file_detail["FileId"]:file_detail["FileName"]}
-        self.get_all_things(file_detail["FileId"])
-        # print(self.file_list)
-        # print(self.dir_list)
-        # print(self.name_dict)
-        for i in self.file_list:
-            AbsPath = i["AbsPath"]
-            for key,value in self.name_dict.items():
-                AbsPath = AbsPath.replace(str(key),value)
-            download_path = download_path_root + AbsPath
-            download_path = download_path.replace("/"+str(i["FileId"]),"")
-            self.download_from_url(i["DownloadUrl"],i["FileName"],download_path)
+        all_list = self.get_dir_by_id(file_detail["FileId"], save=False)[1]
+        for i in all_list[::-1]:
+            if i["Type"] == 0: # 直接开始下载
+                AbsPath = i["AbsPath"]
+                for key,value in self.name_dict.items():
+                    AbsPath = AbsPath.replace(str(key),value)
+                download_path = download_path_root + AbsPath
+                download_path = download_path.replace("/"+str(i["FileId"]),"")
+                self.download_from_url(i["DownloadUrl"],i["FileName"],download_path)
 
-        self.download_mode = 1
+            else:
+                self.download_dir(i,download_path_root)
+
 
     def recycle(self):
         recycle_id = 0
@@ -833,7 +832,8 @@ if __name__ == "__main__":
                     if sure == "2":
                         pan.download(int(command[9:]) - 1)
                     elif sure == "1":
-                        pan.download_dir(int(command[9:]) - 1)
+                        file_detail = pan.list[int(command[9:]) - 1]
+                        pan.download_dir(file_detail)
                 else:
                     pan.download(int(command[9:]) - 1)
 
