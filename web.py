@@ -717,6 +717,7 @@ class Pan123:
 
 
 if __name__ == "__main__":
+    print("web协议将废弃，请使用android协议")
     pan = Pan123(readfile=True, input_pwd=True)
     pan.show()
     while True:
