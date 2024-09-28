@@ -1,9 +1,11 @@
 # 123云盘 下载工具
 
 ## 项目介绍
-
+#### 1.下载工具
 123云盘下载工具是一个使用 Python 编写的脚本，通过模拟安卓客户端协议来绕过 123云盘的自用下载流量限制。该工具可以帮助用户在电脑上方便地下载 123云盘上的文件，并提供了多种操作功能，如列出文件、下载文件、上传文件、分享文件等。
-
+#### 2.油猴脚本
+123download.js是一个油猴（篡改猴）脚本，使用油猴扩展安装该脚本后，用户可以直接在123云盘官网不限流量下载文件（文件夹打包仍有流量限制，请尽量单文件下载）
+# 一、123云盘下载工具
 ## 功能特点
 
 - **登录**：使用用户名和密码登录 123Pan 账号。
@@ -186,8 +188,43 @@ Windows用户下载123pan_win_x86_64.zip，解压后直接运行android.exe。
 ### 配置文件说明
 
 在首次运行脚本时，会自动生成一个 `123pan.txt` 文件，用于保存用户的登录信息。请确保该文件与脚本在同一目录下。
+# 二、123云盘辅助下载脚本
+## 功能
+不影响网页端的操作下，绕开流量限制，可以直接点击下载
+（文件夹打包仍无法不限流量下载,文件夹请使用下载工具下载）
 
-## 注意事项
+## 安装方法
+## 1.通过油叉安装（推荐）
+### 下载油猴扩展
+
+进入谷歌浏览器或edge浏览器扩展商店，搜索“篡改猴”，安装：<br>
+![image](https://github.com/user-attachments/assets/88ea4392-7f09-432c-a8d4-06f63781a8ed)
+
+### 安装脚本<br>
+打开篡改猴，点击获取新脚本：<br>
+
+![image](https://github.com/user-attachments/assets/5a874ebb-2e5d-423b-9200-9addaeaa32a7)
+
+### 进入油叉：<br>
+
+![image](https://github.com/user-attachments/assets/05a1cd0a-ef40-45db-9367-3136e4b7262c)
+
+### 搜索```123云盘下载辅助```:<br>
+![image](https://github.com/user-attachments/assets/6b8a5d08-6e8b-404a-a993-8474f85cdb04)<br>
+### 安装：<br>
+![image](https://github.com/user-attachments/assets/42cc5908-e29e-4ed8-852e-83ee59540bfb)<br>
+<br>
+![image](https://github.com/user-attachments/assets/3d1c07e6-19dd-4474-bde3-121b493803b8)<br>
+![image](https://github.com/user-attachments/assets/788454f3-e8a6-4597-9c67-9a585478dbe7)
+
+
+### 安装完成后即可进入123云盘官网不限速下载：
+![image](https://github.com/user-attachments/assets/0a83df5c-c95d-4fa7-804d-e714b78c5a14)
+
+## 2.直接安装
+下载本仓库的123download.js，安装进油猴即可，具体方法不再详述，请自行搜索。
+
+# 注意事项
 
 - 请确保在使用过程中网络连接正常。
 - 由于使用了模拟安卓客户端协议，可能会有一定的风险，请谨慎使用。
