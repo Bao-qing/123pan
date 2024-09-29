@@ -4,6 +4,7 @@
 // @version      0.1
 // @description  123 Cloud Drive Unlimited Flow
 // @match        https://www.123pan.com/*
+// @match        https://www.123pan.cn/*
 // @grant        none
 // @author       Qing
 // ==/UserScript==
