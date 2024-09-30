@@ -206,7 +206,7 @@ Windows用户下载123pan_win_x86_64.zip，解压后直接运行android.exe。
 
 ![image](https://github.com/user-attachments/assets/5a874ebb-2e5d-423b-9200-9addaeaa32a7)
 
-### 进入油叉：<br>
+### 进入油叉： 或直接进入脚本地址：```https://greasyfork.org/zh-CN/scripts/510621-123%E4%BA%91%E7%9B%98%E4%B8%8B%E8%BD%BD%E8%BE%85%E5%8A%A9```<br>
 
 ![image](https://github.com/user-attachments/assets/05a1cd0a-ef40-45db-9367-3136e4b7262c)
 
