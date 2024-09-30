@@ -5,6 +5,8 @@
 // @description  123 Cloud Drive Unlimited Flow
 // @match        https://www.123pan.com/*
 // @match        https://www.123pan.cn/*
+// @match        https://www.123865.com/*
+// @match        https://www.123684.com/*
 // @grant        none
 // @author       Qing
 // ==/UserScript==
