@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         123云盘下载辅助
 // @namespace    https://github.com/Bao-qing/123pan
-// @version      0.2
+// @version      0.3
 // @description  123 Cloud Drive Unlimited Flow
 // @match        https://www.123pan.com/*
 // @match        https://www.123pan.cn/*
