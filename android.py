@@ -884,15 +884,14 @@ class Pan123:
             with open("123pan.txt", "r", encoding="utf-8") as f:
                 text = f.read()
             text = json.loads(text)
-            user_name = text["userName"]
-            pass_word = text["passWord"]
-            authorization = text["authorization"]
-
-            # 读取设备信息
             deviceType = text["deviceType"]
             osVersion = text["osVersion"]
             self.devicetype = deviceType
             self.osversion = osVersion
+            # 读取设备信息
+            user_name = text["userName"]
+            pass_word = text["passWord"]
+            authorization = text["authorization"]
 
         except:  # FileNotFoundError or json.decoder.JSONDecodeError:
             print("获取配置失败，重新输入")
