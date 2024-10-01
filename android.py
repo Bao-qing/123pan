@@ -999,6 +999,7 @@ if __name__ == "__main__":
                     continue
                 if pan.list[int(command[9:]) - 1]["Type"] == 1:
                     print(pan.list[int(command[9:]) - 1]["FileName"])
+                    print("打包下载没有客户端api，仍然使用网页接口，会有流量限制，请尽量使用遍历下载。")
                     print("输入1遍历下载，输入2打包下载:", end="")
                     sure = input()
                     if sure == "2":
