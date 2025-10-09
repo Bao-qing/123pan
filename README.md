@@ -5,7 +5,11 @@
 安卓客户端协议不受下载流量限制（推荐使用）。
 
 123download.js 是网页端下载油猴脚本最初版本，仍然可以使用，仅保留最基本的解锁下载功能，不再更新。
-可以参考其他项目：[123云盘解锁 (@QingJ)](https://greasyfork.org/zh-CN/scripts/519353-123%E4%BA%91%E7%9B%98%E8%A7%A3%E9%94%81)
+
+可以参考其他项目：
+
+[123云盘解锁 (@QingJ)](https://greasyfork.org/zh-CN/scripts/519353-123%E4%BA%91%E7%9B%98%E8%A7%A3%E9%94%81)
+
 [123 云盘会员青春版 (@hmjz100)](https://greasyfork.org/zh-CN/scripts/513528-123-%E4%BA%91%E7%9B%98%E4%BC%9A%E5%91%98%E9%9D%92%E6%98%A5%E7%89%88)
 
 ## 特性

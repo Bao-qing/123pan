@@ -1,1 +1,1 @@
-pyinstaller -F 123pan.py --icon icon.ico --clean --noconfirm
+pyinstaller -F 123pan.py --icon favicon.ico --clean --noconfirm
