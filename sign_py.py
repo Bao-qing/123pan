@@ -1,3 +1,4 @@
+# 网页端加签算法，目前123pan已弃用
 import time
 import random
 from datetime import datetime

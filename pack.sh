@@ -1,2 +1,1 @@
-pyinstaller -F android.py
-pyinstaller -F web.py
+pyinstaller -F 123pan.py --icon icon.ico --clean --noconfirm
