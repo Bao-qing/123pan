@@ -1,3 +1,10 @@
 123pan_config.json
 download/*
 123pan.txt
+dist/*
+build/*
+123pan.dist/*
+.idea/*
+123pan.exe
+123pan.spec
+android.py

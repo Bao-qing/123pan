@@ -860,6 +860,21 @@ class Pan123:
         print(f"已切换到 {protocol} 协议")
         return True
 
+    def cdById(self, file_id: int):
+        """根据文件夹ID切换目录"""
+        # 重置文件页数和文件列表
+        self.all_file = False
+        self.file_page = 0
+        self.list = []
+
+        # 更新当前目录ID和目录列表
+        self.parent_file_id = file_id
+        self.parent_file_list.append(self.parent_file_id)
+
+        # 获取新目录内容并显示
+        self.get_dir()
+        self.show()
+
 
 if __name__ == "__main__":
     """主交互函数"""
