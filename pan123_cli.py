@@ -2,11 +2,12 @@
 123pan 控制台交互界面 —— 仅负责用户 IO，所有业务调用 Pan123Core。
 """
 
+import json
 import os
 import sys
-from typing import List
+from typing import Dict
 
-from pan123_core import Pan123Core, format_size, make_result
+from pan123_core import Pan123Core, Pan123Tool, Pan123EventType, format_size
 
 
 # ──────────────── 颜色工具 ────────────────
@@ -50,7 +51,9 @@ class Pan123CLI:
   exit               - 退出程序"""
 
     def __init__(self, config_file: str = "123pan_config.json"):
-        self.core = Pan123Core(config_file=config_file)
+        self.config_file: str = config_file
+        self.core = Pan123Core()
+        self.tool = Pan123Tool(self.core)
         self._download_mode: int = 0  # 0=询问, 3=全部覆盖, 4=全部跳过
 
     # ──────────────── 启动 ────────────────
@@ -62,11 +65,36 @@ class Pan123CLI:
             os.system("")
 
         self._print_banner()
-        self._init_login()
+        if not self._init_login():
+            print(colored("无法登录", Color.RED))
+            a = input("输入1重新输入账号和密码，输入2清除登录信息，其他键退出: ")
+            if a == "1":
+                user_name = input("请输入用户名: ")
+                password = input("请输入密码: ")
+                if not user_name or not password:
+                    print("用户名和密码不能为空，程序退出")
+                    return
+                self.core.load_config({
+                    "userName": user_name,
+                    "passWord": password,
+                    "authorization": ""
+                })
+                self.save_config()
+                return self.run()
+            if a == "2":
+                self._do_clear_account()
+                return self.run()
+            return
+
+        self.save_config()
+        self.core.refresh()  # 加载文件列表
+        self.core.get_user_info()
+        self._show_files()
 
         while True:
             try:
                 prompt = colored(f"{self.core.cwd_path}>", Color.RED) + " "
+                print(colored(f'用户：{self.core.nick_name}', Color.GREEN))
                 command = input(prompt).strip()
                 if not command:
                     continue
@@ -82,26 +110,39 @@ class Pan123CLI:
 
     def _print_banner(self) -> None:
         print("=" * 60)
-        print("123网盘客户端".center(56))
+        print("123网盘CLI客户端".center(56))
         print("=" * 60)
 
-    def _init_login(self) -> None:
+    def _init_login(self) -> bool:
         """尝试加载配置 -> 尝试访问目录 -> 必要时登录"""
-        self.core.load_config()
+        res = self.load_config()
+        r = self.core.init_login_state()
+        if r["code"] < 0:
+            print(colored("登录失败", Color.YELLOW))
+            print(r["message"])
+            return False
+        return True
 
-        r = self.core.refresh()
-        if r["code"] != 0:
-            # 需要登录
-            if not self.core.user_name:
-                self.core.user_name = input("请输入用户名: ")
-            if not self.core.password:
-                self.core.password = input("请输入密码: ")
-            lr = self.core.login()
-            self._print_result(lr)
-            if lr["code"] == 0:
-                self.core.refresh()
+    def load_config(self) -> Dict:
+        """加载配置"""
+        try:
+            with open(self.config_file, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+        except FileNotFoundError:
+            user_name = input("请输入用户名: ")
+            password = input("请输入密码: ")
+            cfg = {
+                "userName": user_name,
+                "passWord": password,
+                "authorization": ""
+            }
+        return self.core.load_config(cfg)
 
-        self._show_files()
+    def save_config(self) -> None:
+        """保存配置"""
+        cfg = self.core.get_current_config()
+        with open(self.config_file, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, indent=2, ensure_ascii=False)
 
     # ──────────────── 命令分发 ────────────────
 
@@ -185,6 +226,7 @@ class Pan123CLI:
 
     def _do_logout(self) -> None:
         r = self.core.logout()
+        self.save_config()
         self._print_result(r)
 
     def _do_clear_account(self) -> None:
@@ -192,6 +234,7 @@ class Pan123CLI:
         confirm = input("确定要清除已登录账号信息吗？(y/N): ").strip().lower()
         if confirm == 'y':
             r = self.core.clear_account()
+            self.save_config()
             self._print_result(r)
         else:
             print("操作已取消")
@@ -275,7 +318,7 @@ class Pan123CLI:
             return
         r = self.core.get_download_url(int(arg) - 1)
         if r["code"] == 0:
-            print(f"文件直链: {r['data']['url']}")
+            print(f"文件直链: \n{r['data']['url']}")
         else:
             self._print_result(r)
 
@@ -292,7 +335,7 @@ class Pan123CLI:
 
         overwrite = self._download_mode == 3
         skip = self._download_mode == 4
-        r = self.core.download_file(
+        r = self.tool.download_file(
             idx,
             on_progress=self._download_progress,
             overwrite=overwrite,
@@ -311,7 +354,7 @@ class Pan123CLI:
                 return
             elif choice == "3":
                 self._download_mode = 3
-            r = self.core.download_file(idx, on_progress=self._download_progress, overwrite=True)
+            r = self.tool.download_file(idx, on_progress=self._download_progress, overwrite=True)
 
         print()  # 换行
         self._print_result(r)
@@ -378,17 +421,29 @@ class Pan123CLI:
     # ──────────────── 进度回调 ────────────────
 
     @staticmethod
-    def _download_progress(downloaded: int, total: int, speed: float) -> None:
-        if total > 0:
-            pct = downloaded / total * 100
-            print(
-                f"\r进度: {pct:.1f}% | {format_size(downloaded)}/{format_size(total)} | {format_size(int(speed))}/s",
-                end="     ",
-                flush=True,
-            )
+    def _download_progress(data) -> None:
+        if data.get("type") == Pan123EventType.DOWNLOAD_PROGRESS:
+            downloaded = data.get("downloaded", 0)
+            total = data.get("total", 0)
+            speed = data.get("speed", 0)
+            if total > 0:
+                pct = downloaded / total * 100
+                print(
+                    f"\r进度: {pct:.1f}% | {format_size(downloaded)}/{format_size(total)} | {format_size(int(speed))}/s",
+                    end="     ",
+                    flush=True,
+                )
+        elif data.get("type") == Pan123EventType.DOWNLOAD_START_FILE:
+            print(f"开始下载: {data.get('file_name', '未知文件')} ({format_size(data.get('file_size', 0))})")
+        elif data.get("type") == Pan123EventType.DOWNLOAD_START_DIRECTORY:
+            print(f"开始下载目录: {data.get('dir_name', '未知目录')}")
+        else:
+            print(json.dumps(data, indent=2))
 
     @staticmethod
-    def _upload_progress(uploaded: int, total: int) -> None:
+    def _upload_progress(data) -> None:
+        uploaded = data.get("uploaded", 0)
+        total = data.get("total", 0)
         if total > 0:
             pct = uploaded / total * 100
             print(f"\r上传进度: {pct:.1f}%", end="", flush=True)
