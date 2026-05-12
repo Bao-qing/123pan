@@ -211,7 +211,8 @@
 
 | 方法名                                                                     | 参数说明                                                                            | 返回值类型  | 功能描述            |  
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------------|--------|-----------------|  
-| `upload_file(file_path, duplicate=0, on_progress=None)`                 | `file_path`: 本地文件路径<br>`duplicate`: 冲突策略（0=报错，1=覆盖，2=保留）<br>`on_progress`: 进度回调 | Result | 上传文件（支持秒传和分块上传） |  
+| `upload_file(file_path, duplicate=0, on_progress=None)`                 | `file_path`: 本地文件或文件夹路径<br>`duplicate`: 冲突策略（0=报错，1=覆盖，2=保留）<br>`on_progress`: 进度回调 | Result | 上传文件；传入文件夹时递归上传 |  
+| `upload_directory(dir_path, duplicate=0, on_progress=None)`             | `dir_path`: 本地文件夹路径<br>其他参数同上                                      | Result | 上传文件夹（保留根目录结构） |  
 | `get_download_url(index)`                                               | `index`: `file_list` 中的目标文件下标                                                   | Result | 获取文件直链（自动处理重定向） |  
 | `share(file_ids, share_pwd="", expiration="2099-12-12T08:00:00+08:00")` | `file_ids`: 文件 ID 列表<br>`share_pwd`: 提取码<br>`expiration`: 过期时间                  | Result | 创建分享链接          |  
 
@@ -256,7 +257,7 @@
 
 | 方法名                                                     | 参数说明                       | 返回值类型  | 功能描述              |  
 |---------------------------------------------------------|----------------------------|--------|-------------------|  
-| `upload_file(file_path, duplicate=0, on_progress=None)` | 同 `Pan123Core.upload_file` | Result | 上传文件（与 Core 方法一致） |  
+| `upload_file(file_path, duplicate=0, on_progress=None)` | 同 `Pan123Core.upload_file` | Result | 上传文件或文件夹（与 Core 方法一致） |  
 
 ---  
 

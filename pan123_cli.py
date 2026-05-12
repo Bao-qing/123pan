@@ -35,7 +35,7 @@ class Pan123CLI:
   ls                 - 显示当前目录
   cd [编号|..|/]     - 切换目录
   mkdir [名称]       - 创建目录
-  upload [路径]      - 上传文件
+  upload [路径]      - 上传文件或文件夹
   rm [编号]          - 删除文件
   share [编号 ...]   - 创建分享
   link [编号]        - 获取文件直链
@@ -152,7 +152,8 @@ class Pan123CLI:
         arg = parts[1].strip() if len(parts) > 1 else ""
 
         handler = {
-            "ls": lambda: self._show_files(),
+            #"ls": lambda: self._show_files(),
+            "ls": lambda: self._do_refresh(),   # 用户希望ls是列出目前文件，故直接刷新并列出
             "login": lambda: self._do_login(),
             "logout": lambda: self._do_logout(),
             "clearaccount": lambda: self._do_clear_account(),
@@ -442,6 +443,21 @@ class Pan123CLI:
 
     @staticmethod
     def _upload_progress(data) -> None:
+        uploaded_total = data.get("uploaded_total")
+        total_size = data.get("total_size")
+        if uploaded_total is not None and total_size is not None:
+            pct = data.get("percent", uploaded_total / total_size * 100 if total_size else 100)
+            file_index = data.get("file_index", 0)
+            file_count = data.get("file_count", 0)
+            file_name = data.get("file_name", "")
+            print(
+                f"\r上传进度: {pct:.1f}% | {format_size(uploaded_total)}/{format_size(total_size)} | "
+                f"{file_index}/{file_count} {file_name}",
+                end="     ",
+                flush=True,
+            )
+            return
+
         uploaded = data.get("uploaded", 0)
         total = data.get("total", 0)
         if total > 0:
