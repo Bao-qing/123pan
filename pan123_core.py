@@ -25,11 +25,14 @@ import requests
 # ════════════════════════════════════════════════════════════════
 
 # ── 基础域名 ──────────────────────────────────────────────────
-API_BASE_URL = "https://www.123pan.com"
+SITE_BASE_URL = "https://www.123pan.com"
+"""123pan 网站根地址"""
+
+API_BASE_URL = "https://api.123278.com"
 """123pan API 根地址"""
 
 # ── 接口端点（相对路径，使用时拼接 API_BASE_URL）────────────────
-URL_LOGIN = "/b/api/user/sign_in"
+URL_LOGIN = "/api/user/sign_in"
 """登录接口"""
 
 URL_FILE_LIST = "/api/file/list/new"
@@ -69,7 +72,7 @@ URL_DETAILS = "/b/api/restful/goapi/v1/file/details"
 """获取文件夹详情接口"""
 
 SHARE_URL_TEMPLATE = "{base}/s/{key}"
-"""分享链接模板，{base} = API_BASE_URL，{key} = ShareKey"""
+"""分享链接模板，{base} = SITE_BASE_URL，{key} = ShareKey"""
 
 # ── 超时配置（秒）────────────────────────────────────────────
 TIMEOUT_DEFAULT = 15
@@ -478,7 +481,19 @@ class Pan123Core:
                 params=params,
                 timeout=timeout,
             )
-            data = resp.json()
+            try:
+                data = resp.json()
+            except ValueError:
+                content_type = resp.headers.get("content-type", "unknown")
+                preview = (resp.text or "").strip().replace("\r", " ").replace("\n", " ")
+                if len(preview) > 200:
+                    preview = f"{preview[:200]}..."
+                if not preview:
+                    preview = "<empty>"
+                return make_result(
+                    -2,
+                    f"响应 JSON 解析错误: HTTP {resp.status_code}, Content-Type: {content_type}, Body: {preview}",
+                )
             api_code = data.get("code", -1)
             # 123pan 登录成功/退出登录 成功返回 code 200，其余接口成功返回 0
             if api_code not in (CODE_OK, CODE_LOGIN_OK):
@@ -486,8 +501,6 @@ class Pan123Core:
             return make_result(CODE_OK, "ok", data)
         except requests.RequestException as e:
             return make_result(-1, f"请求失败: {e}")
-        except json.JSONDecodeError:
-            return make_result(-2, "响应 JSON 解析错误")
 
     # ════════════════════════════════════════════════════════════
     #  用户信息
@@ -996,7 +1009,7 @@ class Pan123Core:
         if r["code"] != CODE_OK:
             return r
         key = r["data"]["data"]["ShareKey"]
-        share_url = SHARE_URL_TEMPLATE.format(base=API_BASE_URL, key=key)
+        share_url = SHARE_URL_TEMPLATE.format(base=SITE_BASE_URL, key=key)
         return make_result(CODE_OK, "分享创建成功", {
             "share_url": share_url,
             "share_pwd": share_pwd,
