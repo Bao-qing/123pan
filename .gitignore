@@ -7,4 +7,4 @@ build/*
 .idea/*
 123pan.exe
 123pan.spec
-android.py
+android.py__pycache__/
