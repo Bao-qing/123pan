@@ -355,6 +355,10 @@ class Pan123CLI:
                 return
             elif choice == "3":
                 self._download_mode = 3
+            elif choice != "1":
+                # 非有效选项（1/2/3/4）一律取消，避免误覆盖
+                print("无效选择，已取消下载")
+                return
             r = self.tool.download_file(idx, on_progress=self._download_progress, overwrite=True)
 
         print()  # 换行
