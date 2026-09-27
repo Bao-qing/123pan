@@ -1,4 +1,5 @@
 123pan_config.json
+
 download/*
 123pan.txt
 dist/*
@@ -7,4 +8,5 @@ build/*
 .idea/*
 123pan.exe
 123pan.spec
-android.py__pycache__/
+android.py
+__pycache__/
